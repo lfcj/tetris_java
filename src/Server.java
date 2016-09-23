@@ -60,7 +60,9 @@ public class Server {
 			while (iterator.hasNext()) {
 				cs = iterator.next();
 				try {
-					cs.getOutputStream().write(buffer);
+					//Only send msg to other clients
+					if(cs != client_socket) cs.getOutputStream().write(buffer);
+
 				} catch (IOException e) {
 					// Socket is broken.					
 					try {

@@ -31,6 +31,8 @@ public class Client {
 				out.write(msg.getBytes());
 			} catch (IOException e) {
 				socket.close();
+				System.out.println("The server has been disconnected.");
+				break;
 			}
 		}
 	}
@@ -43,7 +45,13 @@ public class Client {
 				while (running) {
 					buffer = new byte[1024];
 					try {
-						in.read(buffer);
+						int bytes_read = in.read(buffer);
+						//Detect if server socket closes and close client
+						if(bytes_read < 0){ 
+							running = false;
+							socket.close();
+							break;
+						}
 						System.out.println("msg received: " + new String(buffer, StandardCharsets.UTF_8));
 					} catch (IOException e) {
 					}
@@ -55,6 +63,7 @@ public class Client {
 
 	public static void main(String[] args) throws UnknownHostException, IOException {
 		new Client("localhost", 1234);
+		//new Client("192.168.178.97", 1234);
 	}
 }
 
